@@ -1,24 +1,19 @@
-//
-//  ContentView.swift
-//  Zenith
-//
-//  Created by Abdullah Elbokl on 23/02/2026.
-//
-
+import SwiftData
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+
+  @Environment(\.modelContext) private var modelContext
+
+  var body: some View {
+    NavigationStack {
+      DashboardView(viewModel: HabitViewModel(modelContext: modelContext))
     }
+    .preferredColorScheme(.dark)
+  }
 }
 
 #Preview {
-    ContentView()
+  ContentView()
+    .modelContainer(for: Habit.self, inMemory: true)
 }

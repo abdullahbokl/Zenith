@@ -1,17 +1,12 @@
-//
-//  ZenithApp.swift
-//  Zenith
-//
-//  Created by Abdullah Elbokl on 23/02/2026.
-//
-
+import SwiftData
 import SwiftUI
 
 @main
 struct ZenithApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
     }
+    .modelContainer(for: Habit.self)
+  }
 }
