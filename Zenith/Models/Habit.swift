@@ -51,12 +51,13 @@ extension Habit {
     guard let first = uniqueDates.first else { return 0 }
 
     let todayStart = calendar.startOfDay(for: .now)
-    let yesterdayStart = calendar.date(byAdding: .day, value: -1, to: todayStart)!
-    guard first >= yesterdayStart else { return 0 }
+    guard let yesterdayStart = calendar.date(byAdding: .day, value: -1, to: todayStart),
+      first >= yesterdayStart
+    else { return 0 }
 
     var streak = 1
     for i in 1..<uniqueDates.count {
-      let expected = calendar.date(byAdding: .day, value: -i, to: first)!
+      guard let expected = calendar.date(byAdding: .day, value: -i, to: first) else { break }
       if calendar.isDate(uniqueDates[i], inSameDayAs: expected) {
         streak += 1
       } else {

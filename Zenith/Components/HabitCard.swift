@@ -24,32 +24,46 @@ struct HabitCard: View {
   }
 
   var body: some View {
-    Button(action: onToggle) {
-      HStack(spacing: AppTheme.spacing) {
-        iconBadge
-        titleSection
-        Spacer()
+    HStack(spacing: AppTheme.spacing) {
+      iconBadge
+      titleSection
+      Spacer()
+
+      Button {
+        onToggle()
+      } label: {
         CircularProgressView(
           progress: monthlyProgress,
           lineWidth: 4,
           gradient: habitGradient,
           size: AppTheme.iconSize
         )
+        .overlay(
+          Image(systemName: habit.todayCheckedIn ? "checkmark" : "")
+            .font(.system(size: 14, weight: .bold))
+            .foregroundStyle(Color(hex: habit.color))
+        )
       }
-      .padding(AppTheme.spacing)
-      .background(AppTheme.cardGradient)
-      .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardCornerRadius))
-      .overlay(
-        RoundedRectangle(cornerRadius: AppTheme.cardCornerRadius)
-          .strokeBorder(
-            habit.todayCheckedIn
-              ? Color(hex: habit.color).opacity(0.4)
-              : Color.clear,
-            lineWidth: 1.5
-          )
-      )
+      .buttonStyle(ScaleButtonStyle())
+      .accessibilityLabel(
+        habit.todayCheckedIn ? "Undo check-in for \(habit.title)" : "Check in \(habit.title)")
     }
-    .buttonStyle(ScaleButtonStyle())
+    .padding(AppTheme.spacing)
+    .background(AppTheme.cardGradient)
+    .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardCornerRadius))
+    .overlay(
+      RoundedRectangle(cornerRadius: AppTheme.cardCornerRadius)
+        .strokeBorder(
+          habit.todayCheckedIn
+            ? Color(hex: habit.color).opacity(0.4)
+            : Color.clear,
+          lineWidth: 1.5
+        )
+    )
+    .accessibilityElement(children: .combine)
+    .accessibilityLabel("\(habit.title), \(subtitleText)")
+    .accessibilityHint(
+      "Tap to view details. Double-tap the progress ring to toggle today's check-in.")
   }
 
   // MARK: - Sub-views

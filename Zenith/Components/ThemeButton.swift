@@ -36,17 +36,6 @@ struct ThemeButton: View {
   }
 }
 
-// MARK: - Scale Button Style
-
-struct ScaleButtonStyle: ButtonStyle {
-  func makeBody(configuration: Configuration) -> some View {
-    configuration.label
-      .scaleEffect(configuration.isPressed ? 0.95 : 1)
-      .opacity(configuration.isPressed ? 0.9 : 1)
-      .animation(.spring(duration: 0.25), value: configuration.isPressed)
-  }
-}
-
 #Preview {
   VStack(spacing: 16) {
     ThemeButton("Save Habit", icon: "checkmark.circle.fill") {}

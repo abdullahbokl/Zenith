@@ -1,14 +1,23 @@
 import SwiftUI
 
-/// Sheet for creating a new habit — title, icon, and colour picker.
-struct AddHabitSheet: View {
+/// Sheet for editing an existing habit — title, icon, and colour picker.
+struct EditHabitSheet: View {
 
   @Environment(\.dismiss) private var dismiss
   @Bindable var viewModel: HabitViewModel
+  let habit: Habit
 
-  @State private var title = ""
-  @State private var selectedIcon = AppTheme.habitIcons[0]
-  @State private var selectedColor = AppTheme.habitColors[0]
+  @State private var title: String
+  @State private var selectedIcon: String
+  @State private var selectedColor: String
+
+  init(viewModel: HabitViewModel, habit: Habit) {
+    self.viewModel = viewModel
+    self.habit = habit
+    _title = State(initialValue: habit.title)
+    _selectedIcon = State(initialValue: habit.icon)
+    _selectedColor = State(initialValue: habit.color)
+  }
 
   private var isValid: Bool { !title.trimmingCharacters(in: .whitespaces).isEmpty }
 
@@ -21,9 +30,10 @@ struct AddHabitSheet: View {
           iconPicker
           colorPicker
 
-          ThemeButton("Create Habit", icon: "checkmark.circle.fill") {
+          ThemeButton("Save Changes", icon: "checkmark.circle.fill") {
             guard isValid else { return }
-            viewModel.addHabit(
+            viewModel.updateHabit(
+              habit,
               title: title.trimmingCharacters(in: .whitespaces),
               icon: selectedIcon,
               color: selectedColor
@@ -36,7 +46,7 @@ struct AddHabitSheet: View {
         .padding(AppTheme.spacing)
       }
       .background(AppTheme.surface.ignoresSafeArea())
-      .navigationTitle("New Habit")
+      .navigationTitle("Edit Habit")
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .cancellationAction) {
@@ -85,7 +95,6 @@ struct AddHabitSheet: View {
               lineWidth: 1
             )
         )
-        .accessibilityLabel("Habit title")
     }
   }
 
@@ -133,8 +142,6 @@ struct AddHabitSheet: View {
             )
         )
     }
-    .accessibilityLabel("Icon: \(icon)")
-    .accessibilityAddTraits(isSelected ? .isSelected : [])
   }
 
   // MARK: - Colour Picker
@@ -170,7 +177,5 @@ struct AddHabitSheet: View {
         )
         .scaleEffect(isSelected ? 1.15 : 1)
     }
-    .accessibilityLabel("Color \(hex)")
-    .accessibilityAddTraits(isSelected ? .isSelected : [])
   }
 }
